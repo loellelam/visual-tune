@@ -1,5 +1,6 @@
 let music;
 let amp, fft;
+let ps;
 
 function preload() {
     soundFormats('mp3');
@@ -20,16 +21,20 @@ function draw() {
 
     // Process amp
     let level = amp.getLevel();
-    let size = map(level, 0, 1, 5, 40);
-    sphere(size, 10, 3);
+    // let boundLevel = map(level, 0, 1, 0, 20);
+    // sphere(size, 10, 3);
+
+    if (ps) {
+        ps.run(level);
+    }
 
     // Process freq
-    let spectrum = fft.analyze();
-    for (let i = 0; i< spectrum.length; i++){
-        let x = map(i, 0, spectrum.length, 0, width);
-        let h = -height + map(spectrum[i], 0, 255, height, 0);
-        rect(x, height, width / spectrum.length, h )
-    }
+    // let spectrum = fft.analyze();
+    // for (let i = 0; i< spectrum.length; i++){
+    //     let x = map(i, 0, spectrum.length, 0, width);
+    //     let h = -height + map(spectrum[i], 0, 255, height, 0);
+    //     rect(x, height, width / spectrum.length, h )
+    // }
     
     // other interesting audio analysis
     /** getOutputVolume()
@@ -41,4 +46,7 @@ function canvasPressed() {
     // playing a sound file on a user gesture
     // is equivalent to `userStartAudio()`
     music.play();
+
+    ps = new ParticleSystem(20);
+    ps.start();
   }
