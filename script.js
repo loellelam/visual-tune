@@ -14,7 +14,7 @@ function setup() {
 
     // Instantiate
     amp = new p5.Amplitude();
-    fft = new p5.FFT();
+    // fft = new p5.FFT();
 
     // text("Noise", 0, 610)
     slider = createSlider(0, 10, 0.5);
@@ -42,10 +42,6 @@ function draw() {
     //     rect(x, height, width / spectrum.length, h )
     // }
     
-    // other interesting audio analysis
-    /** getOutputVolume()
-     * 
-     */
 }
 
 function canvasPressed() {

@@ -34,14 +34,19 @@ function Particle(pos) {
     }
 
     this.display = function() {
-        fill(150, this.lifetime);
+        let distance = dist(this.position.x, this.position.y, 0, 0);
+        let fillColor = map(distance, 0, 300, 0, 255); // adjust fill from black to white based on distance
+
+        fill(fillColor, this.lifetime);
         noStroke();
         circle(this.position.x, this.position.y, 12);
     }
 
     this.isExpired = function() {
-        return this.lifetime < 0.0;
-
-        //expire at edge of canvas
+        let expired = false;
+        if (this.lifetime < 0.0 || dist(this.position.x, this.position.y, 0, 0) > 300) {
+            expired = true;
+        }
+        return expired;
     }
 }
