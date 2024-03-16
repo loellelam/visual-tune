@@ -2,12 +2,12 @@ function Particle(pos) {
     this.position = pos;
     this.lifetime = random(900.0, 1000.0);
   
-    this.run = function(amp) {
-        this.update(amp);
+    this.run = function(amp, noiseMagnitude) {
+        this.update(amp, noiseMagnitude);
         this.display();
     }
 
-    this.update = function(amp) {
+    this.update = function(amp, noiseMagnitude) {
         // calculate force based on amplitude
         let force = createVector(0, 0);
         let distance = dist(this.position.x, this.position.y, 0, 0);
@@ -23,7 +23,7 @@ function Particle(pos) {
 
         // add perlin noise
         let noiseForce = createVector(noise(this.position.x * 0.01, this.position.y * 0.01) - 0.5, noise(this.position.y * 0.01, this.position.x * 0.01) - 0.5);
-        noiseForce.mult(2);
+        noiseForce.mult(noiseMagnitude);
         force.add(noiseForce);
 
         // add forces to particle
@@ -41,5 +41,7 @@ function Particle(pos) {
 
     this.isExpired = function() {
         return this.lifetime < 0.0;
+
+        //expire at edge of canvas
     }
 }

@@ -1,6 +1,7 @@
 let music;
 let amp, fft;
 let ps;
+let slider;
 
 function preload() {
     soundFormats('mp3');
@@ -14,6 +15,11 @@ function setup() {
     // Instantiate
     amp = new p5.Amplitude();
     fft = new p5.FFT();
+
+    // text("Noise", 0, 610)
+    slider = createSlider(0, 10, 0.5);
+    slider.position(0, 700);
+    slider.input(updateNoiseMagnitude);
 }
 
 function draw() {
@@ -47,6 +53,13 @@ function canvasPressed() {
     // is equivalent to `userStartAudio()`
     music.play();
 
-    ps = new ParticleSystem(20);
+    ps = new ParticleSystem(100);
     ps.start();
-  }
+}
+
+function updateNoiseMagnitude() {
+    let value = slider.value();
+    if (ps) {
+        ps.setNoiseMagnitude(value);
+    }
+}
