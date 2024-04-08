@@ -44,9 +44,13 @@ function Particle(pos) {
     }
 
     this.display = function() {
-        let distance = dist(this.position.x, this.position.y, 0, 0);
-        let fillColor = map(distance, 0, 300, 0, 255); // adjust fill from black to white based on distance
-
+        // let distance = dist(this.position.x, this.position.y, 0, 0);
+        // let fillColor = map(distance, 0, 300, 0, 255); // adjust fill from black to white based on distance
+        let colorValue = map(this.audioAnalysis.chroma[0], 0, 1, 80, 250); // Map chromaValue to a value between 0 and 255
+        let r = colorValue;
+        let g = 0;
+        let b = 255 - colorValue;
+        let fillColor = color(r, g, b);
         fill(fillColor, this.lifetime);
         noStroke();
         // let size = map(this.audioAnalysis.perceptualSharpness, 0.4, 0.8, 11, 13);
