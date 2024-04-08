@@ -22,7 +22,7 @@ function setup() {
         "audioContext": audioContext,
         "source": music,
         "bufferSize": 512,
-        "featureExtractors": ["perceptualSharpness", "spectralSlope", "chroma"],
+        "featureExtractors": ["perceptualSharpness", "spectralSlope", "chroma", "perceptualSpread"],
         "callback": features => {
             for (let feature in features) {
                 audioAnalysis[feature] = features[feature];
@@ -41,7 +41,7 @@ function setup() {
 }
 
 function draw() {
-    background(240);
+    background(40);
 
     // Process amp
     let level = amp.getLevel();

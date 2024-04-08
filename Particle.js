@@ -53,7 +53,8 @@ function Particle(pos) {
         let fillColor = color(r, g, b);
         fill(fillColor, this.lifetime);
         noStroke();
-        // let size = map(this.audioAnalysis.perceptualSharpness, 0.4, 0.8, 11, 13);
+        // let size = map(this.audioAnalysis.perceptualSpread, 0, 1, 11, 13);
+        // size * random(0.9, 1.2)
         circle(this.position.x, this.position.y, 12);
         // sphere(10, 10, 3);
         // translate(this.position.x, this.position.y);
