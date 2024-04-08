@@ -1,17 +1,22 @@
 function Particle(pos) {
     this.position = pos;
-    this.lifetime = random(900.0, 1000.0);
+    this.lifetime = random(100.0, 500.0);
+    this.audioAnalysis = {};
   
-    this.run = function(amp, noiseMagnitude) {
-        this.update(amp, noiseMagnitude);
+    this.run = function(audioAnalysis, amp, noiseMagnitude) {
+        this.audioAnalysis = audioAnalysis;
+        this.audioAnalysis.amp = amp;
+        this.audioAnalysis.noiseMagnitude = noiseMagnitude;
+
+        this.update();
         this.display();
     }
 
-    this.update = function(amp, noiseMagnitude) {
+    this.update = function() {
         // calculate force based on amplitude
         let force = createVector(0, 0);
         let distance = dist(this.position.x, this.position.y, 0, 0);
-        if (amp < 0.2) {
+        if (this.audioAnalysis.amp < 0.2) {
             force = createVector(-this.position.x, -this.position.y).normalize(); // pull towards origin
         }
         else {
@@ -21,13 +26,18 @@ function Particle(pos) {
         let magnitude = map(distance, 0, width, 1, 0.1);
         force.mult(magnitude);
 
+        // rotational force
+        let rotationalForce = createVector(-this.position.y, this.position.x).normalize(); // calculated as a vector perpendicular to the particle's position vector
+        rotationalForce.mult(this.audioAnalysis.perceptualSharpness * 2);
+
         // add perlin noise
         let noiseForce = createVector(noise(this.position.x * 0.01, this.position.y * 0.01) - 0.5, noise(this.position.y * 0.01, this.position.x * 0.01) - 0.5);
-        noiseForce.mult(noiseMagnitude);
+        noiseForce.mult(this.audioAnalysis.noiseMagnitude);
         force.add(noiseForce);
 
         // add forces to particle
         this.position.add(force);
+        this.position.add(rotationalForce);
 
         // reduce particle lifetime
         this.lifetime -= 1.0;
@@ -39,7 +49,10 @@ function Particle(pos) {
 
         fill(fillColor, this.lifetime);
         noStroke();
+        // let size = map(this.audioAnalysis.perceptualSharpness, 0.4, 0.8, 11, 13);
         circle(this.position.x, this.position.y, 12);
+        // sphere(10, 10, 3);
+        // translate(this.position.x, this.position.y);
     }
 
     this.isExpired = function() {

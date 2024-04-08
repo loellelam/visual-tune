@@ -1,5 +1,8 @@
 let music;
-let amp, fft;
+let amp;
+let audioContext, analyzer;
+let audioAnalysis = {}; // store audio analysis data
+
 let ps;
 let slider;
 
@@ -10,11 +13,26 @@ function preload() {
 
 function setup() {
     let cnv = createCanvas(800, 600, WEBGL);
+    cnv.center("horizontal");
     cnv.mousePressed(canvasPressed);
+
+    // Initialize the Meyda Analyzer
+    audioContext = getAudioContext();
+    analyzer = Meyda.createMeydaAnalyzer({
+        "audioContext": audioContext,
+        "source": music,
+        "bufferSize": 512,
+        "featureExtractors": ["perceptualSharpness", "spectralSlope", "chroma"],
+        "callback": features => {
+            for (let feature in features) {
+                audioAnalysis[feature] = features[feature];
+            }
+        }
+    });
+    analyzer.start();
 
     // Instantiate
     amp = new p5.Amplitude();
-    // fft = new p5.FFT();
 
     // text("Noise", 0, 610)
     slider = createSlider(0, 10, 0.5);
@@ -31,15 +49,13 @@ function draw() {
     // sphere(size, 10, 3);
 
     if (ps) {
-        ps.run(level);
+        ps.run(audioAnalysis, level);
     }
 
-    // Process freq
-    // let spectrum = fft.analyze();
-    // for (let i = 0; i< spectrum.length; i++){
-    //     let x = map(i, 0, spectrum.length, 0, width);
-    //     let h = -height + map(spectrum[i], 0, 255, height, 0);
-    //     rect(x, height, width / spectrum.length, h )
+     // Draw based on the RMS value
+    // if (typeof rmsValue !== "undefined") {
+    //     let ellipseSize = map(rmsValue, 0, 1, 10, 200);
+    //     ellipse(width / 2, height / 2, ellipseSize, ellipseSize);
     // }
     
 }
@@ -49,7 +65,7 @@ function canvasPressed() {
     // is equivalent to `userStartAudio()`
     music.play();
 
-    ps = new ParticleSystem(100);
+    ps = new ParticleSystem(200);
     ps.start();
 }
 

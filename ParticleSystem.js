@@ -13,11 +13,21 @@ function ParticleSystem(d) {
         }
     }
 
-    this.run = function(amp) {
+    this.run = function(audioAnalysis, amp) {
+        // spawn new particles
+        if (this.particleArray.length < this.density * 1.1) {
+            let numParticlesToSpawn = map(audioAnalysis.spectralSlope, 0, 1, 2, 1);
+            for (let i = 0; i < numParticlesToSpawn; i++) {
+                let positionX = random(-this.radius, this.radius);
+                let positionY = random(-this.radius, this.radius);
+                this.particleArray.push(new Particle(createVector(positionX, positionY)));
+            }
+        }
+
         for (let i = 0; i < this.particleArray.length; i++) {
             // perform particle calculations
             let particle = this.particleArray[i];
-            particle.run(amp, this.noiseMagnitude);
+            particle.run(audioAnalysis, amp, this.noiseMagnitude);
 
             // remove expired particles
             if (particle.isExpired()) {
