@@ -3,6 +3,8 @@ function Particle(pos) {
     this.lifetime = random(100.0, 500.0);
     this.audioAnalysis = {};
     this.psAttr = {};
+
+    this.sf = 0.9;
   
     this.run = function(audioAnalysis, psAttr, amp, noiseMagnitude) {
         this.audioAnalysis = audioAnalysis;
@@ -18,11 +20,13 @@ function Particle(pos) {
         // calculate force based on amplitude
         let force = createVector(0, 0);
         let distance = dist(this.position.x, this.position.y, 0, 0);
+        // let strengthFactor = map(distance, 0, width/2, 1, this.sf);
+
         if (this.audioAnalysis.amp < 0.2) {
-            force = createVector(-this.position.x, -this.position.y).normalize(); // pull towards origin
+            force = createVector(-this.position.x, -this.position.y).normalize().mult(this.sf); // pull towards origin
         }
         else {
-            force = createVector(this.position.x, this.position.y).normalize(); // push away from origin
+            force = createVector(this.position.x, this.position.y).normalize().mult(this.sf); // push away from origin
         }
         // apply force based on distance
         let magnitude = map(distance, 0, width, 1, 0.1);
@@ -70,4 +74,8 @@ function Particle(pos) {
         }
         return expired;
     }
+
+    Particle.prototype.setStrengthFactor = function(value) {
+        this.sf = value / 10;
+    };
 }

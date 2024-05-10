@@ -6,7 +6,8 @@ let audioContext, analyzer;
 let audioAnalysis = {}; // store audio analysis data
 
 let ps = []; // array of particle systems
-let slider;
+let noiseSlider;
+let sfSlider;
 
 function preload() {
     soundFormats('mp3');
@@ -41,9 +42,13 @@ function setup() {
     textFont(myFont);
     textSize(36);;
     // text("Noise", 0, 910)
-    slider = createSlider(0, 10, 0.5);
-    slider.position(5, 110);
-    slider.input(updateNoiseMagnitude);
+    noiseSlider = createSlider(0, 10, 0.5);
+    noiseSlider.position(5, 170);
+    noiseSlider.input(updateNoiseMagnitude);
+
+    sfSlider = createSlider(1, 10);
+    sfSlider.position(5, 250);
+    sfSlider.input(updateStrengthFactor);
 }
 
 function draw() {
@@ -77,14 +82,14 @@ function canvasPressed() {
         chromaticTone: 0 // 0 = C, 1= Bb, ...
     }));
     ps.push(new ParticleSystem({
-        density: 200,
+        density: 100,
         color: color(0, 100, 150),
-        chromaticTone: 0 // 0 = C, 1= Bb, ...
+        chromaticTone: 5 // 0 = C, 1= Bb, ...
     }));
     ps.push(new ParticleSystem({
-        density: 200,
+        density: 50,
         color: color(100, 150, 0),
-        chromaticTone: 0 // 0 = C, 1= Bb, ...
+        chromaticTone: 8 // 0 = C, 1= Bb, ...
     }));
     for (let i = 0; i < 3; i++) {
         ps[i].start();
@@ -93,8 +98,15 @@ function canvasPressed() {
 }
 
 function updateNoiseMagnitude() {
-    let value = slider.value();
-    if (ps) {
-        ps.setNoiseMagnitude(value);
+    let value = noiseSlider.value();
+    if (ps[0]) {
+        ps[0].setNoiseMagnitude(value);
+    }
+}
+
+function updateStrengthFactor() {
+    let value = sfSlider.value();
+    if (ps[0]) {
+        ps[0].setStrengthFactor(value);
     }
 }
