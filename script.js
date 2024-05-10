@@ -1,3 +1,4 @@
+let myFont;
 let start = false;
 let music;
 let amp;
@@ -10,10 +11,12 @@ let slider;
 function preload() {
     soundFormats('mp3');
     music = loadSound('assets/once-in-paris.mp3');
+    myFont = loadFont('fonts/ARIAL.TTF');
 }
 
 function setup() {
     let cnv = createCanvas(800, 600, WEBGL);
+    cnv.parent('canvasContainer');
     cnv.center("horizontal");
     cnv.mousePressed(canvasPressed);
 
@@ -35,9 +38,11 @@ function setup() {
     // Instantiate
     amp = new p5.Amplitude();
 
-    // text("Noise", 0, 610)
+    textFont(myFont);
+    textSize(36);;
+    // text("Noise", 0, 910)
     slider = createSlider(0, 10, 0.5);
-    slider.position(0, 700);
+    slider.position(5, 110);
     slider.input(updateNoiseMagnitude);
 }
 
