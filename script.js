@@ -1,3 +1,4 @@
+let start = false;
 let music;
 let amp;
 let audioContext, analyzer;
@@ -58,7 +59,10 @@ function draw() {
 
 function canvasPressed() {
     // playing a sound file on a user gesture is equivalent to `userStartAudio()`
-    music.play();
+    if (!start) {
+        music.play();
+        start = true;
+    }
 
     // generate 3 particle systems
     ps.push(new ParticleSystem({
