@@ -3,7 +3,7 @@ let amp;
 let audioContext, analyzer;
 let audioAnalysis = {}; // store audio analysis data
 
-let ps;
+let ps = []; // array of particle systems
 let slider;
 
 function preload() {
@@ -22,7 +22,7 @@ function setup() {
         "audioContext": audioContext,
         "source": music,
         "bufferSize": 512,
-        "featureExtractors": ["perceptualSharpness", "spectralSlope", "chroma", "perceptualSpread"],
+        "featureExtractors": ["rms", "perceptualSharpness", "spectralSlope", "chroma", "perceptualSpread"],
         "callback": features => {
             for (let feature in features) {
                 audioAnalysis[feature] = features[feature];
@@ -48,25 +48,39 @@ function draw() {
     // let boundLevel = map(level, 0, 1, 0, 20);
     // sphere(size, 10, 3);
 
-    if (ps) {
-        ps.run(audioAnalysis, level);
+    for (let i = 0; i < 3; i++) {
+        if (ps[i]) {
+            ps[i].run(audioAnalysis, level);
+        }
     }
-
-     // Draw based on the RMS value
-    // if (typeof rmsValue !== "undefined") {
-    //     let ellipseSize = map(rmsValue, 0, 1, 10, 200);
-    //     ellipse(width / 2, height / 2, ellipseSize, ellipseSize);
-    // }
     
 }
 
 function canvasPressed() {
-    // playing a sound file on a user gesture
-    // is equivalent to `userStartAudio()`
+    // playing a sound file on a user gesture is equivalent to `userStartAudio()`
     music.play();
 
-    ps = new ParticleSystem(200);
-    ps.start();
+    // generate 3 particle systems
+    ps.push(new ParticleSystem({
+        density: 200,
+        color: color(100, 0, 150),
+        shape: "circle",
+        chromaticTone: 0 // 0 = C, 1= Bb, ...
+    }));
+    ps.push(new ParticleSystem({
+        density: 200,
+        color: color(0, 100, 150),
+        chromaticTone: 0 // 0 = C, 1= Bb, ...
+    }));
+    ps.push(new ParticleSystem({
+        density: 200,
+        color: color(100, 150, 0),
+        chromaticTone: 0 // 0 = C, 1= Bb, ...
+    }));
+    for (let i = 0; i < 3; i++) {
+        ps[i].start();
+    }
+
 }
 
 function updateNoiseMagnitude() {

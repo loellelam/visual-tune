@@ -2,9 +2,11 @@ function Particle(pos) {
     this.position = pos;
     this.lifetime = random(100.0, 500.0);
     this.audioAnalysis = {};
+    this.psAttr = {};
   
-    this.run = function(audioAnalysis, amp, noiseMagnitude) {
+    this.run = function(audioAnalysis, psAttr, amp, noiseMagnitude) {
         this.audioAnalysis = audioAnalysis;
+        this.psAttr = psAttr;
         this.audioAnalysis.amp = amp;
         this.audioAnalysis.noiseMagnitude = noiseMagnitude;
 
@@ -40,17 +42,18 @@ function Particle(pos) {
         this.position.add(rotationalForce);
 
         // reduce particle lifetime
-        this.lifetime -= 1.0;
+        // this.lifetime -= 1.0;
     }
 
     this.display = function() {
         // let distance = dist(this.position.x, this.position.y, 0, 0);
         // let fillColor = map(distance, 0, 300, 0, 255); // adjust fill from black to white based on distance
-        let colorValue = map(this.audioAnalysis.chroma[0], 0, 1, 80, 250); // Map chromaValue to a value between 0 and 255
-        let r = colorValue;
-        let g = 0;
-        let b = 255 - colorValue;
-        let fillColor = color(r, g, b);
+        // let colorValue = map(this.audioAnalysis.chroma[0], 0, 1, 80, 250); // Map chromaValue to a value between 0 and 255
+        // let r = colorValue;
+        // let g = 0;
+        // let b = 255 - colorValue;
+        // let fillColor = color(r, g, b);
+        fillColor = this.psAttr.color;
         fill(fillColor, this.lifetime);
         noStroke();
         // let size = map(this.audioAnalysis.perceptualSpread, 0, 1, 11, 13);
